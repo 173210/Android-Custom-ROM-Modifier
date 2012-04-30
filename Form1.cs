@@ -119,9 +119,10 @@ namespace Android_Custom_ROM_Modifier
             {
                 Console.AppendText(SelectedProfiles[i] + "の適用中… [" + (i + 2) + "/" + SelectedProfiles.Length + "]\r\n");
                 ProcessStartInfo makeinfo = new ProcessStartInfo();
+                makeinfo.FileName = "cmd.exe";
+                makeinfo.Arguments = "/k \"" + Program.profiles + "\\" + SelectedProfiles[i] + "\" \\make.cmd";
                 makeinfo.CreateNoWindow = true;
                 makeinfo.ErrorDialog = true;
-                makeinfo.FileName = Program.profiles + "\\" + SelectedProfiles[i] + "\\make.cmd";
                 makeinfo.RedirectStandardError = true;
                 makeinfo.RedirectStandardOutput = true;
                 makeinfo.UseShellExecute = false;
@@ -132,18 +133,18 @@ namespace Android_Custom_ROM_Modifier
                 {
                     while (!reader.EndOfStream)
                     {
-                        Console.AppendText(reader.ReadLine());
+                        Console.AppendText(reader.ReadLine() + "\r\n");
                     }
                 }
                 reader.Close();
                 if (make.ExitCode == 1)
                 {
                     toolStripStatusLabel.Text = "エラー";
-                    Console.AppendText("\r\nエラー：" + SelectedProfiles[i] + "の適用中にエラーが発生しました。");
+                    Console.AppendText("エラー：" + SelectedProfiles[i] + "の適用中にエラーが発生しました。\r\n");
                     DialogResult make_error = MessageBox.Show(SelectedProfiles[i] + "でエラーが発生しました。このまま続行しますか？", "エラー", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                     if (make_error == DialogResult.No)
                     {
-                        Console.AppendText("\r\n作業が中止されました。\r\n");
+                        Console.AppendText("作業が中止されました。\r\n");
                         if (TempDelete.Checked == false)
                         {
                             toolStripStatusLabel.Text = "一時ファイルを削除しています…";
@@ -156,7 +157,7 @@ namespace Android_Custom_ROM_Modifier
                         return;
                     }
                 }
-                Console.AppendText("\r\n" + SelectedProfiles[i] + "の適用が完了しました。[" + (i + 1) + "/" + SelectedProfiles.Length + "]\r\n");
+                Console.AppendText(SelectedProfiles[i] + "の適用が完了しました。[" + (i + 1) + "/" + SelectedProfiles.Length + "]\r\n");
                 toolStripProgressBar.Value = toolStripProgressBar.Value + ProgressBar_Add_Value;
             }
             Console.AppendText("すべてのプロファイルの適用が完了しました。\r\nROMをパッケージしています… [" + (SelectedProfiles.Length + 2) + "/" + Processes_Number  + "]\r\n");
