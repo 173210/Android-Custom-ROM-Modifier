@@ -119,8 +119,7 @@ namespace Android_Custom_ROM_Modifier
             {
                 Console.AppendText(SelectedProfiles[i] + "の適用中… [" + (i + 2) + "/" + SelectedProfiles.Length + "]\r\n");
                 ProcessStartInfo makeinfo = new ProcessStartInfo();
-                makeinfo.FileName = "cmd.exe";
-                makeinfo.Arguments = "/k \"" + Program.profiles + "\\" + SelectedProfiles[i] + "\" \\make.cmd";
+                makeinfo.FileName = Program.profiles + "\\" + SelectedProfiles[i] + "\" \\make.cmd";
                 makeinfo.CreateNoWindow = true;
                 makeinfo.ErrorDialog = true;
                 makeinfo.RedirectStandardError = true;
