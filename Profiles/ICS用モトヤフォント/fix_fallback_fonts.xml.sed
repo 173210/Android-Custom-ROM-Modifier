@@ -3,4 +3,4 @@ s/<familyset>/<familyset>\
         <fileset>\
             <file>MTLc3m.ttf<\/file>\
         <\/fileset>\
-    <\/family>\
+    <\/family>/

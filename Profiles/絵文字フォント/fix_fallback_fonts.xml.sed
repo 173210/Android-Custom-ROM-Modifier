@@ -3,4 +3,4 @@ s/<familyset>/<familyset>\
         <fileset>\
             <file>truetypeEmoji.ttf<\/file>\
         <\/fileset>\
-    <\/family>\
+    <\/family>/

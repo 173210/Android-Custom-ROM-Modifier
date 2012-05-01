@@ -43,6 +43,9 @@
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.Console = new System.Windows.Forms.TextBox();
             this.Console_Label = new System.Windows.Forms.Label();
+            this.command1 = new System.Windows.Forms.TextBox();
+            this.Command = new System.Windows.Forms.Label();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -164,7 +167,7 @@
             this.Console.Multiline = true;
             this.Console.Name = "Console";
             this.Console.ReadOnly = true;
-            this.Console.Size = new System.Drawing.Size(257, 200);
+            this.Console.Size = new System.Drawing.Size(257, 167);
             this.Console.TabIndex = 11;
             // 
             // Console_Label
@@ -176,11 +179,37 @@
             this.Console_Label.TabIndex = 12;
             this.Console_Label.Text = "実行状況";
             // 
+            // command1
+            // 
+            this.command1.Location = new System.Drawing.Point(282, 216);
+            this.command1.Name = "command1";
+            this.command1.Size = new System.Drawing.Size(252, 19);
+            this.command1.TabIndex = 13;
+            this.command1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.command_inputed);
+            // 
+            // Command
+            // 
+            this.Command.AutoSize = true;
+            this.Command.Location = new System.Drawing.Point(280, 198);
+            this.Command.Name = "Command";
+            this.Command.Size = new System.Drawing.Size(76, 12);
+            this.Command.TabIndex = 14;
+            this.Command.Text = "コマンド入力欄";
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
             // Menu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(546, 262);
+            this.Controls.Add(this.Command);
+            this.Controls.Add(this.command1);
             this.Controls.Add(this.Console_Label);
             this.Controls.Add(this.Console);
             this.Controls.Add(this.statusStrip1);
@@ -195,7 +224,7 @@
             this.Controls.Add(this.BaseROMFileLabel);
             this.Controls.Add(this.BaseROMFile);
             this.Name = "Menu";
-            this.Text = "カスタムROM改変一撃ツール ver2.0.0.0";
+            this.Text = "カスタムROM改変一撃ツール ver2.1.0.0";
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -220,6 +249,9 @@
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.TextBox Console;
         private System.Windows.Forms.Label Console_Label;
+        private System.Windows.Forms.TextBox command1;
+        private System.Windows.Forms.Label Command;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }
 

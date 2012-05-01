@@ -25,6 +25,8 @@ namespace Android_Custom_ROM_Modifier
             }
             ProfileSelect.Items.AddRange(dirs);
         }
+        private Process makecmd;
+        private bool makecmd_started = false;
         private void BaseROMFileSelect_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -53,121 +55,202 @@ namespace Android_Custom_ROM_Modifier
 
         private void Make_Click(object sender, EventArgs e)
         {
-            toolStripStatusLabel.Text = "現在の状態を確認しています…";
-            Console.AppendText("現在の状態を確認しています…\r\n元ROMを確認しています… [1/3]\r\n");
-            if (File.Exists(BaseROMFile.Text)) {
-                Console.AppendText("確認しました。\r\n保存先を確認しています… [2/3]\r\n");
+            Make.Enabled = false;
+            backgroundWorker.RunWorkerAsync();
+            while(backgroundWorker.IsBusy)
+            {
+                Application.DoEvents();
+            }
+        }
+
+        private void command_inputed(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (makecmd_started == true)
+                {
+                    makecmd.StandardInput.Write(command1.Text);
+                }
+            }
+        }
+
+        delegate void SetFocusDelegate();
+
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Invoke((SetFocusDelegate)delegate()
+            {
+                toolStripStatusLabel.Text = "現在の状態を確認しています…";
+                Console.AppendText("現在の状態を確認しています…\r\n元ROMを確認しています… [1/3]\r\n");
+            });
+            if (File.Exists(BaseROMFile.Text))
+            {
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    Console.AppendText("確認しました。\r\n保存先を確認しています… [2/3]\r\n");
+                });
             }
             else
             {
-                toolStripStatusLabel.Text = "エラー";
-                Console.AppendText("エラー：元ROMが見つかりません\r\n");
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    toolStripStatusLabel.Text = "エラー";
+                    Console.AppendText("エラー：元ROMが見つかりません\r\n");
+                });
                 MessageBox.Show("元ROMを指定してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 toolStripStatusLabel.Text = "";
                 return;
             }
-            toolStripProgressBar.Value = 33;
-            if (Directory.Exists(Path.GetDirectoryName(SaveFile.Text))) {
-                Console.AppendText("確認しました。\r\nworkフォルダを調べています… [3/3]\r\n");
+            backgroundWorker.ReportProgress(33);
+            if (Directory.Exists(Path.GetDirectoryName(SaveFile.Text)))
+            {
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    Console.AppendText("確認しました。\r\nworkフォルダを調べています… [3/3]\r\n");
+                });
             }
             else
             {
-                toolStripStatusLabel.Text = "エラー";
-                Console.AppendText("エラー：保存先が見つかりません\r\n");
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    toolStripStatusLabel.Text = "エラー";
+                    Console.AppendText("エラー：保存先が見つかりません\r\n");
+                });
                 MessageBox.Show("保存先を指定してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                toolStripStatusLabel.Text = "";
                 return;
             }
-            toolStripProgressBar.Value = 66;
+            backgroundWorker.ReportProgress(66);
             if (Directory.Exists(Program.work))
             {
-                toolStripStatusLabel.Text = "警告";
-                Console.AppendText("workフォルダが見つかりました。\r\n");
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    toolStripStatusLabel.Text = "警告";
+                    Console.AppendText("workフォルダが見つかりました。\r\n");
+                });
                 DialogResult question = MessageBox.Show("workフォルダが存在します。workフォルダを削除しますか?\n削除せずに続行する場合はいいえを、中止する場合はキャンセルを押してください。", "カスタムROM改変一撃ツール", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (question == DialogResult.Yes) {
-                    toolStripStatusLabel.Text = "workフォルダを削除しています…";
-                    Console.AppendText("workフォルダを削除しています…\r\n");
+                if (question == DialogResult.Yes)
+                {
+                    Invoke((SetFocusDelegate)delegate()
+                    {
+                        toolStripStatusLabel.Text = "workフォルダを削除しています…";
+                        Console.AppendText("workフォルダを削除しています…\r\n");
+                    });
                     DirectoryInfo workinfo = new DirectoryInfo(Program.work);
                     workinfo.Delete(true);
-                    Console.AppendText("workフォルダを削除しました。\r\n");
+                    Invoke((SetFocusDelegate)delegate()
+                    {
+                        Console.AppendText("workフォルダを削除しました。\r\n");
+                    });
                 }
-                else if (question == DialogResult.Cancel) {
-                    toolStripProgressBar.Value = 0;
-                    toolStripStatusLabel.Text = "";
+                else if (question == DialogResult.Cancel)
+                {
                     Console.AppendText("処理がユーザーにより中止されました。\r\n");
                     return;
                 }
-                toolStripProgressBar.Value = 100;
+                backgroundWorker.ReportProgress(100);
             }
-            toolStripProgressBar.Value = 0;
+            backgroundWorker.ReportProgress(0);
             string[] SelectedProfiles = new string[ProfileSelect.CheckedItems.Count];
             int Processes_Number = 3 + SelectedProfiles.Length;
             int ProgressBar_Add_Value = 100 / Processes_Number;
-            Console.AppendText("状態の確認が完了しました。\r\nROMを作成します。\r\n元ROMの展開中… [1/" + Processes_Number + "]\r\n");
-            toolStripStatusLabel.Text = "作成中…";
+            Invoke((SetFocusDelegate)delegate()
+            {
+                Console.AppendText("状態の確認が完了しました。\r\nROMを作成します。\r\n元ROMの展開中… [1/" + Processes_Number + "]\r\n");
+                toolStripStatusLabel.Text = "作成中…";
+            });
             using (ZipFile zip = ZipFile.Read(@BaseROMFile.Text))
             {
                 zip.ExtractExistingFile =
                     Ionic.Zip.ExtractExistingFileAction.OverwriteSilently;
                 zip.ExtractAll(Program.work);
             }
-            Console.AppendText("完了しました。\r\n");
-            toolStripProgressBar.Value = ProgressBar_Add_Value;
-            ProfileSelect.CheckedItems.CopyTo(SelectedProfiles,0);
+            Invoke((SetFocusDelegate)delegate(){
+            Console.AppendText("完了しました。\r\n");});
+            int toolStripProgressBar_Value = ProgressBar_Add_Value;
+            backgroundWorker.ReportProgress(toolStripProgressBar_Value);
+            ProfileSelect.CheckedItems.CopyTo(SelectedProfiles, 0);
             StreamReader reader;
-            for (int i = 0; i <= SelectedProfiles.Length - 1; i++) 
+            string readline;
+            for (int i = 0; i <= SelectedProfiles.Length - 1; i++)
             {
-                Console.AppendText(SelectedProfiles[i] + "の適用中… [" + (i + 2) + "/" + SelectedProfiles.Length + "]\r\n");
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    Console.AppendText(SelectedProfiles[i] + "の適用中… [" + (i + 2) + "/" + SelectedProfiles.Length + "]\r\n");
+                });
                 ProcessStartInfo makeinfo = new ProcessStartInfo();
-                makeinfo.FileName = Program.profiles + "\\" + SelectedProfiles[i] + "\" \\make.cmd";
+                makeinfo.FileName = Program.profiles + "\\" + SelectedProfiles[i] + "\\make.cmd";
                 makeinfo.CreateNoWindow = true;
                 makeinfo.ErrorDialog = true;
                 makeinfo.RedirectStandardError = true;
                 makeinfo.RedirectStandardOutput = true;
+                makeinfo.RedirectStandardInput = true;
                 makeinfo.UseShellExecute = false;
                 makeinfo.WorkingDirectory = Program.path;
-                Process make = Process.Start(makeinfo);
-                reader = make.StandardOutput;
-                while (make.HasExited == false)
+                makecmd_started = true;
+                makecmd = Process.Start(makeinfo);
+                reader = makecmd.StandardOutput;
+
+                while (makecmd.HasExited == false)
                 {
                     while (!reader.EndOfStream)
                     {
-                        Console.AppendText(reader.ReadLine() + "\r\n");
+                        readline = reader.ReadLine() + "\r\n";
+                        Invoke((SetFocusDelegate)delegate() {
+                        Console.AppendText(readline);});
                     }
                 }
                 reader.Close();
-                if (make.ExitCode == 1)
+                makecmd_started = false;
+                if (makecmd.ExitCode == 1)
                 {
-                    toolStripStatusLabel.Text = "エラー";
-                    Console.AppendText("エラー：" + SelectedProfiles[i] + "の適用中にエラーが発生しました。\r\n");
+                    Invoke((SetFocusDelegate)delegate()
+                    {
+                        toolStripStatusLabel.Text = "エラー";
+                        Console.AppendText("エラー：" + SelectedProfiles[i] + "の適用中にエラーが発生しました。\r\n");
+                    });
                     DialogResult make_error = MessageBox.Show(SelectedProfiles[i] + "でエラーが発生しました。このまま続行しますか？", "エラー", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                     if (make_error == DialogResult.No)
                     {
-                        Console.AppendText("作業が中止されました。\r\n");
+                        Invoke((SetFocusDelegate)delegate()
+                        {
+                            Console.AppendText("作業が中止されました。\r\n");
+                        });
                         if (TempDelete.Checked == false)
                         {
-                            toolStripStatusLabel.Text = "一時ファイルを削除しています…";
-                            Console.AppendText("workフォルダを削除しています…\r\n");
+                            Invoke((SetFocusDelegate)delegate()
+                            {
+                                toolStripStatusLabel.Text = "一時ファイルを削除しています…";
+                                Console.AppendText("workフォルダを削除しています…\r\n");
+                            });
                             DirectoryInfo workinfo = new DirectoryInfo(Program.work);
                             workinfo.Delete(true);
-                            toolStripStatusLabel.Text = "";
                         }
-                        toolStripProgressBar.Value = 0;
                         return;
                     }
                 }
-                Console.AppendText(SelectedProfiles[i] + "の適用が完了しました。[" + (i + 1) + "/" + SelectedProfiles.Length + "]\r\n");
-                toolStripProgressBar.Value = toolStripProgressBar.Value + ProgressBar_Add_Value;
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    Console.AppendText(SelectedProfiles[i] + "の適用が完了しました。[" + (i + 1) + "/" + SelectedProfiles.Length + "]\r\n");
+                });
+                    toolStripProgressBar_Value = toolStripProgressBar_Value + ProgressBar_Add_Value;
+                    backgroundWorker.ReportProgress(toolStripProgressBar_Value);
             }
-            Console.AppendText("すべてのプロファイルの適用が完了しました。\r\nROMをパッケージしています… [" + (SelectedProfiles.Length + 2) + "/" + Processes_Number  + "]\r\n");
+            Invoke((SetFocusDelegate)delegate()
+            {
+                Console.AppendText("すべてのプロファイルの適用が完了しました。\r\nROMをパッケージしています… [" + (SelectedProfiles.Length + 2) + "/" + Processes_Number + "]\r\n");
+            });
             using (ZipFile zip = new ZipFile(Encoding.GetEncoding("utf-8")))
             {
                 zip.CompressionLevel = CompressionLevel.None;
                 zip.AddDirectory(Program.work);
                 zip.Save(Program.path + "\\update-tmp.zip");
             }
-            toolStripProgressBar.Value = toolStripProgressBar.Value + ProgressBar_Add_Value;
-            Console.AppendText("パッケージしました。署名しています… [" + Processes_Number + "/" + Processes_Number + "]\r\n");
+            toolStripProgressBar_Value = toolStripProgressBar_Value + ProgressBar_Add_Value;
+            backgroundWorker.ReportProgress(toolStripProgressBar_Value);
+            Invoke((SetFocusDelegate)delegate()
+            {
+                Console.AppendText("パッケージしました。署名しています… [" + Processes_Number + "/" + Processes_Number + "]\r\n");
+            });
             ProcessStartInfo signinfo = new ProcessStartInfo();
             signinfo.CreateNoWindow = true;
             signinfo.ErrorDialog = true;
@@ -179,24 +262,44 @@ namespace Android_Custom_ROM_Modifier
             Process sign = Process.Start(signinfo);
             if (TempDelete.Checked == false)
             {
-                toolStripStatusLabel.Text = "一時ファイルを削除しています…";
-                Console.AppendText("workフォルダを削除しています…\r\n");
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    toolStripStatusLabel.Text = "一時ファイルを削除しています…";
+                    Console.AppendText("workフォルダを削除しています…\r\n");
+                });
                 DirectoryInfo workinfo = new DirectoryInfo(Program.work);
                 workinfo.Delete(true);
-                Console.AppendText("完了しました。署名が完了するまで待機します。\r\n");
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    Console.AppendText("完了しました。署名が完了するまで待機します。\r\n");
+                });
                 sign.WaitForExit();
-                Console.AppendText("署名が完了しました。\r\nupdate-tmp.zipを削除しています…\r\n");
+                Invoke((SetFocusDelegate)delegate()
+                {
+                    Console.AppendText("署名が完了しました。\r\nupdate-tmp.zipを削除しています…\r\n");
+                });
                 File.Delete(Program.path + "\\update-tmp.zip");
             }
             else
             {
                 sign.WaitForExit();
-                Console.AppendText("署名が完了しました。\r\n");
+                Invoke((SetFocusDelegate)delegate() {
+                    Console.AppendText("署名が完了しました。\r\n");});
             }
-            toolStripProgressBar.Value = 100;
-            toolStripStatusLabel.Text = "";
+            backgroundWorker.ReportProgress(100);
             Console.AppendText("全作業が完了しました。\r\n");
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Make.Enabled = true;
             toolStripProgressBar.Value = 0;
+            toolStripStatusLabel.Text = "";
+        }
+
+        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            toolStripProgressBar.Value = e.ProgressPercentage;
         }
     }
 }

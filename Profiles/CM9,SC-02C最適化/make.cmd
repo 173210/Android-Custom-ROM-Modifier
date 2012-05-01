@@ -1,4 +1,4 @@
-xcopy
+@echo off
 echo ファイルを確認しています…
 IF NOT EXIST .\work\system\build.prop EXIT 1
 echo ファイルをコピーしています…
@@ -12,5 +12,5 @@ echo updater-scriptを書き換えています…
 .\tools\tr -d '\r' < .\work\META-INF\com\google\android\updater-script_fixed1 > .\work\META-INF\com\google\android\updater-script
 del .\work\META-INF\com\google\android\updater-script_fixed
 del .\work\META-INF\com\google\android\updater-script_fixed1
+del .\work\system\build.prop_fixed
 echo 完了しました。
-pause

@@ -38,7 +38,7 @@ namespace Android_Custom_ROM_Modifier
             else
             {
                 MessageBox.Show("tools\\testkey.x509.pemがありません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
+                Environment.Exit(0);
             }
             string[] profiles_dir = System.IO.Directory.GetDirectories(profiles);
             if (profiles_dir.Length == 0)
