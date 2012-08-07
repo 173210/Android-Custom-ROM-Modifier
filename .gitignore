@@ -2,5 +2,9 @@
 bin
 obj
 
+Android_Custom_ROM_Modifier.csproj.user
+Android_Custom_ROM_Modifier.sln
+Android_Custom_ROM_Modifier.suo
+
 # mstest test results
 TestResults

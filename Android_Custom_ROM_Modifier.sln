@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Android_Custom_ROM_Modifier", "Android_Custom_ROM_Modifier\Android_Custom_ROM_Modifier.csproj", "{D7604936-05D2-41F5-BDDC-C4A536A38242}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Android_Custom_ROM_Modifier", "Android_Custom_ROM_Modifier.csproj", "{D7604936-05D2-41F5-BDDC-C4A536A38242}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,4 +10,7 @@
     <FallbackCulture>ja-JP</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>C:\Users\akihiko\Documents\Visual Studio 2010\Projects\Android_Custom_ROM_Modifier\Android_Custom_ROM_Moidfier\Libraries\</ReferencePath>
+  </PropertyGroup>
 </Project>
