@@ -45,6 +45,10 @@
             this.Console_Label = new System.Windows.Forms.Label();
             this.command1 = new System.Windows.Forms.TextBox();
             this.Command = new System.Windows.Forms.Label();
+<<<<<<< HEAD
+=======
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+>>>>>>> origin/master
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -197,7 +201,10 @@
             this.Console.Multiline = true;
             this.Console.Name = "Console";
             this.Console.ReadOnly = true;
+<<<<<<< HEAD
             this.Console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+=======
+>>>>>>> origin/master
             this.Console.Size = new System.Drawing.Size(257, 167);
             this.Console.TabIndex = 11;
             // 
@@ -212,8 +219,11 @@
             // 
             // command1
             // 
+<<<<<<< HEAD
             this.command1.AccessibleDescription = "コマンド入力欄です。Enterキーで入力されます。";
             this.command1.AccessibleName = "コマンド入力欄";
+=======
+>>>>>>> origin/master
             this.command1.Location = new System.Drawing.Point(282, 216);
             this.command1.Name = "command1";
             this.command1.Size = new System.Drawing.Size(252, 19);
@@ -229,6 +239,16 @@
             this.Command.TabIndex = 14;
             this.Command.Text = "コマンド入力欄";
             // 
+<<<<<<< HEAD
+=======
+            // backgroundWorker
+            // 
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+>>>>>>> origin/master
             // Menu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -250,8 +270,12 @@
             this.Controls.Add(this.BaseROMFileLabel);
             this.Controls.Add(this.BaseROMFile);
             this.Name = "Menu";
+<<<<<<< HEAD
             this.Text = "カスタムROM改変一撃ツール ver2.2.0.4";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Menu_FormClosing);
+=======
+            this.Text = "カスタムROM改変一撃ツール ver2.1.0.0";
+>>>>>>> origin/master
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -278,6 +302,10 @@
         private System.Windows.Forms.Label Console_Label;
         private System.Windows.Forms.TextBox command1;
         private System.Windows.Forms.Label Command;
+<<<<<<< HEAD
+=======
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+>>>>>>> origin/master
     }
 }
 
